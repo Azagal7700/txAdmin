@@ -144,6 +144,24 @@ local function txaReportResources(source, args)
     end, 'POST', json.encode(exData), {['Content-Type']='application/json'})
 end
 
+--- Server save all
+local function txaGoingSaveServer(source)
+    --Send to txAdmin
+    local url = "http://"..TX_LUACOMHOST.."/intercom/serverSavedAll"
+    local hasBeenSaved = exports["gamemode"]:serverSaveAll();
+
+    local exData = {
+        txAdminToken = TX_LUACOMTOKEN,
+        success = hasBeenSaved == true
+    }
+    txPrint('SERVER SAVED ALL')
+    PerformHttpRequest(url, function(httpCode, data, resultHeaders)
+        local resp = tostring(data)
+        if httpCode ~= 200 then
+            logError("ServerSaveAll failed with code "..httpCode.." and message: "..resp)
+        end
+    end, 'POST', json.encode(exData), {['Content-Type']='application/json'})
+end
 
 --- Setter for the txAdmin-debugMode convar and TX_DEBUG_MODE global variable
 local function txaSetDebugMode(source, args)
@@ -351,7 +369,7 @@ local function handleConnections(name, setKickReason, d)
     -- if server is shutting down
     if TX_IS_SERVER_SHUTTING_DOWN then
         CancelEvent()
-        setKickReason("[txAdmin] Server is shutting down, try again in a few seconds.")
+        setKickReason("Le serveur est en train de s'arrêter. Veuillez essayer de vous connecter à nouveau plus tard.")
         return
     end
 
@@ -429,6 +447,7 @@ RegisterCommand("txaPing", txaPing, true)
 RegisterCommand("txaKickAll", txaKickAll, true)
 RegisterCommand("txaEvent", txaEvent, true)
 RegisterCommand("txaReportResources", txaReportResources, true)
+RegisterCommand("txaGoingSaveServer", txaGoingSaveServer, true)
 RegisterCommand("txaSetDebugMode", txaSetDebugMode, true)
 AddEventHandler('playerConnecting', handleConnections)
 SetHttpHandler(handleHttp)

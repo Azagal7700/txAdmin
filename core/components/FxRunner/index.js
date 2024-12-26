@@ -82,6 +82,7 @@ export default class FXRunner {
         this.fxServerHost = null;
         this.currentMutex = null;
         this.cfxId = null;
+        this.currentSaveProcessPromise = null;
         this.fd3Handler = new Fd3Handler(txAdmin);
     }
 
@@ -372,6 +373,18 @@ export default class FXRunner {
         }
     }
 
+    saveAllServerData() {
+        if (this.currentSaveProcessPromise) {
+            console.log('Server already processing database saving.');
+            return false;
+        };
+        const cmdSuccess = this.srvCmd("txaGoingSaveServer");
+        if (!cmdSuccess) return false;
+
+        return new Promise((resolve) => {
+            this.currentSaveProcessPromise = resolve;
+        });
+    }
 
     /**
      * Kills the FXServer
@@ -413,6 +426,8 @@ export default class FXRunner {
             //Awaiting restart delay
             //The 250 is so at least everyone is kicked from the server
             await sleep(250 + this.config.shutdownNoticeDelay * 1000);
+
+            await this.saveAllServerData();
 
             //Stopping server
             if (this.fxChild !== null) {

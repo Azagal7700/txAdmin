@@ -3,6 +3,7 @@ import { cloneDeep }  from 'lodash-es';
 import { txEnv } from '@core/globalData';
 import consoleFactory from '@extras/console';
 import { InitializedCtx } from '@core/components/WebServer/ctxTypes';
+import TxAdmin from '@core/txAdmin';
 const console = consoleFactory(modulename);
 
 
@@ -36,6 +37,13 @@ export default async function Intercom(ctx: InitializedCtx) {
             return ctx.utils.error(400, 'Invalid Request');
         }
         ctx.txAdmin.resourcesManager.tmpUpdateResourceList(postData.resources);
+    } else if (scope == 'serverSavedAll') {
+        if (ctx.txAdmin.fxRunner.currentSaveProcessPromise) {
+            ctx.txAdmin.fxRunner.currentSaveProcessPromise(true);
+            ctx.txAdmin.fxRunner.currentSaveProcessPromise = null;
+            return ctx.send('Save process complete.');
+        } else
+            return ctx.send('An error occured while saving data.');
     } else {
         return ctx.send({
             type: 'danger',
