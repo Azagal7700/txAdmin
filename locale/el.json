@@ -4,9 +4,7 @@
         "humanizer_language": "el"
     },
     "restarter": {
-        "start_timeout": "Απέτυχε η εκκίνηση εντός του χρόνου",
-        "crash_detected": "Βρέθηκε Πρόβλημα",
-        "hang_detected": "hang detected",
+        "server_unhealthy_kick_reason": "ο διακομιστής πρέπει να επανεκκινηθεί, παρακαλώ επανασυνδεθείτε",
         "partial_hang_warn": "Due to a partial hang, this server will restart in 1 minute. Please disconnect now.",
         "partial_hang_warn_discord": "Due to a partial hang, **%{servername}** will restart in 1 minute.",
         "schedule_reason": "Προγραμματισμένη επανεκκίνηση σε %{time}",
@@ -40,7 +38,7 @@
             "deny_message": "Τα identifiers σου δεν σχετίζονται με κάποιον txAdmin administrator."
         },
         "guild_member": {
-            "mode_title": "Ο διακομιστής βρίσκεται σε <strong>Discord Guild Member Whitelist</strong> mode.",
+            "mode_title": "Ο διακομιστής βρίσκεται σε <strong>Discord server Member Whitelist</strong> mode.",
             "insufficient_ids": "Δεν έχεις <code>discord</code> identifier, το οποίο απαιτείται για την επικύρωση του αν έχεις μπεί στο Discord μας. Please open the Discord Desktop app and try again (the Web app won't work).",
             "deny_title": "Πρέπει να είσαι στο Discord μας για να συνδεθείς.",
             "deny_message": "Συνδέσου στο %{guildname} και ξανά προσπάθησε."

@@ -1,21 +1,25 @@
-import { SvRtPerfThreadNamesType } from "@core/components/StatsManager/svRuntime/config";
-import { SvRtNodeMemoryType, SvRtPerfBoundariesType } from "@core/components/StatsManager/svRuntime/perfSchemas";
-import type { ReactAuthDataType } from "authApiTypes";
-import type { UpdateDataType } from "otherTypes";
+import { SvRtPerfThreadNamesType } from "@core/modules/Metrics/svRuntime/config";
+import { SvRtNodeMemoryType, SvRtPerfBoundariesType } from "@core/modules/Metrics/svRuntime/perfSchemas";
+import type { ReactAuthDataType } from "./authApiTypes";
+import type { UpdateDataType } from "./otherTypes";
+import { DiscordBotStatus, TxConfigState, type FxMonitorHealth } from "./enums";
 
 /**
  * Status channel
  */
-export type ServerConfigPendingStepType = 'setup' | 'deployer' | undefined;
 export type GlobalStatusType = {
-    discord: false | number;
+    configState: TxConfigState;
+    discord: DiscordBotStatus;
+    runner: {
+        isIdle: boolean;
+        isChildAlive: boolean;
+    };
     server: {
-        configPendingStep: ServerConfigPendingStepType;
-        status: string;
-        process: string;
-        instantiated: boolean;
         name: string;
-        whitelist: "disabled" | "adminOnly" | "guildMember" | "guildRoles" | "approvedLicense";
+        uptime: number;
+        health: FxMonitorHealth;
+        healthReason: string;
+        whitelist: 'disabled' | 'adminOnly' | 'approvedLicense' | 'discordMember' | 'discordRoles';
     };
     scheduler: {
         nextRelativeMs: number;
@@ -38,9 +42,6 @@ export type DashboardSvRuntimeDataType = {
     perfBoundaries?: SvRtPerfBoundariesType;
     perfBucketCounts?: {
         [key in SvRtPerfThreadNamesType]: number[];
-    };
-    perfMinTickTime: {
-        [key in SvRtPerfThreadNamesType]: number;
     };
 }
 export type DashboardPleyerDropDataType = {
@@ -106,6 +107,7 @@ export type ListenEventsMap = {
     error: (reason?: string) => void;
     logout: (reason?: string) => void;
     refreshToUpdate: () => void;
+    txAdminShuttingDown: () => void;
     status: (status: GlobalStatusType) => void;
     playerlist: (playerlistData: PlayerlistEventType[]) => void;
     updateAuthData: (authData: ReactAuthDataType) => void;

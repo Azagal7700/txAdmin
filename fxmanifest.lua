@@ -8,11 +8,11 @@ repository 'https://github.com/tabarra/txAdmin'
 version 'REPLACE-VERSION'
 ui_label 'txAdmin'
 
-rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aware my resources *will* become incompatible once RedM ships.'
 fx_version 'cerulean'
-games { 'gta5', 'rdr3' }
+game 'common'
 -- nui_callback_strict_mode 'true' --FIXME: menu iframe doesn't work
 -- lua54 'yes' --TODO: check if it works
+-- node_version '22'
 
 -- NOTE: All server_scripts will be executed both on monitor and server mode 
 -- NOTE: Due to global package constraints, js scripts will be loaded from entrypoint.js

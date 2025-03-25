@@ -4,9 +4,7 @@
         "humanizer_language": "nl"
     },
     "restarter": {
-        "start_timeout": "Kon niet op tijd starten",
-        "crash_detected": "Crash geconstateerd",
-        "hang_detected": "De server is vastgelopen",
+        "server_unhealthy_kick_reason": "de server moet opnieuw worden gestart, maak alsjeblieft opnieuw verbinding",
         "partial_hang_warn": "De server is vastgelopen en zal over 1 minuut herstarten. Verlaat de server nu.",
         "partial_hang_warn_discord": "**%{servername}** is vastgelopen en zal over 1 minuut herstarten.",
         "schedule_reason": "Geplande restart om %{time}",
@@ -14,9 +12,9 @@
         "schedule_warn_discord": "**%{servername}** heeft een geplande restart over %{smart_count} minuut. |||| **%{servername}** heeft een geplande restart over %{smart_count} minuten."
     },
     "kick_messages": {
-        "everyone": "All players kicked: %{reason}.",
-        "player": "You have been kicked: %{reason}.",
-        "unknown_reason": "for unknown reason"
+        "everyone": "Alle spelers gekicked: %{reason}.",
+        "player": "Je bent gekicked: %{reason}.",
+        "unknown_reason": "voor onbekende reden"
     },
     "ban_messages": {
         "kick_temporary": "(%{author}) Je bent tijdelijk verbannen van deze server met de reden: \"%{reason}\". Je ban zal vervallen over: %{expiration}.",
@@ -40,15 +38,15 @@
             "deny_message": "Jouw identifiers zijn niet gekoppeld aan een txAdmin administrator."
         },
         "guild_member": {
-            "mode_title": "Deze server is in <strong>Discord Guild Member Whitelist</strong> modus.",
-            "insufficient_ids": "Je hebt niet de <code>discord</code> identifier, welke is vereist om te valideren of jij onze Discord Guild bent gejoind. Please open the Discord Desktop app and try again (the Web app won't work).",
-            "deny_title": "Je moet onze Discord Guild joinen om verbinding te maken.",
+            "mode_title": "Deze server is in <strong>Discord server Member Whitelist</strong> modus.",
+            "insufficient_ids": "Je hebt niet de <code>discord</code> identifier, welke is vereist om te valideren of jij onze Discord server bent gejoind. Please open the Discord Desktop app and try again (the Web app won't work).",
+            "deny_title": "Je moet onze Discord server joinen om verbinding te maken.",
             "deny_message": "Join de guild %{guildname}, probeer het daarna opnieuw."
         },
         "guild_roles": {
             "mode_title": "Deze server is in <strong>Discord Role Whitelist</strong> modus.",
-            "insufficient_ids": "Je hebt niet de <code>discord</code> identifier, welke is vereist om te valideren of jij onze Discord Guild bent gejoind. Please open the Discord Desktop app and try again (the Web app won't work).",
-            "deny_notmember_title": "Je moet onze Discord Guild joinen om verbinding te maken.",
+            "insufficient_ids": "Je hebt niet de <code>discord</code> identifier, welke is vereist om te valideren of jij onze Discord server bent gejoind. Please open the Discord Desktop app and try again (the Web app won't work).",
+            "deny_notmember_title": "Je moet onze Discord server joinen om verbinding te maken.",
             "deny_notmember_message": "Join %{guildname}, krijg een van de vereiste roles, probeer het daarna opnieuw.",
             "deny_noroles_title": "Je hebt geen whitelisted role die vereist is om te joinen.",
             "deny_noroles_message": "Om deze server te joinen ben je op zijn minst vereist om een van de whitelisted roles te hebben in de guild %{guildname}."
@@ -230,8 +228,8 @@
                 "label": "Filter by",
                 "no_filter": "No Filter",
                 "is_admin": "Is Admin",
-                "is_injured": "Is Injured / Dead",
-                "in_vehicle": "In Vehicle"
+                "is_injured": "Is Verwond / Dood",
+                "in_vehicle": "In Voertuig"
             },
             "sort": {
                 "label": "Sorteren op",

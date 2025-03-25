@@ -1,14 +1,24 @@
 import type { ReactAuthDataType } from "./authApiTypes";
-export type { BanTemplatesDataType, BanDurationType } from "@core/webroutes/banTemplates/utils";
-export type { GetBanTemplatesSuccessResp } from "@core/webroutes/banTemplates/getBanTemplates";
-export type { SaveBanTemplatesResp, SaveBanTemplatesReq } from "@core/webroutes/banTemplates/saveBanTemplates";
-export type { ApiAddLegacyBanReqSchema, ApiRevokeActionReqSchema } from "@core/webroutes/history/actions";
-export type { SvRtLogFilteredType, SvRtPerfCountsThreadType } from "@core/components/StatsManager/svRuntime/perfSchemas";
-export type { SvRtPerfThreadNamesType } from "@core/components/StatsManager/svRuntime/config";
-export type { PerfChartApiResp, PerfChartApiSuccessResp } from "@core/webroutes/perfChart";
-export type { PlayerDropsApiResp, PlayerDropsApiSuccessResp, PlayerDropsDetailedWindow, PlayerDropsSummaryHour } from "@core/webroutes/playerDrops";
-export type { PDLChangeEventType } from '@core/components/StatsManager/playerDrop/playerDropSchemas';
 
+//Config stuff
+export type { TxConfigs, PartialTxConfigs } from "@core/modules/ConfigStore/schema";
+export type { ConfigChangelogEntry } from "@core/modules/ConfigStore/changelog";
+export type { GetConfigsResp } from "@core/routes/settings/getConfigs";
+export type { SaveConfigsReq, SaveConfigsResp } from "@core/routes/settings/saveConfigs";
+export type { BanTemplatesDataType, BanDurationType } from "@core/modules/ConfigStore/schema/banlist";
+export type { ResetServerDataPathResp } from "@core/routes/settings/resetServerDataPath";
+export type { GetBanTemplatesSuccessResp } from "@core/routes/banTemplates/getBanTemplates";
+export type { SaveBanTemplatesResp, SaveBanTemplatesReq } from "@core/routes/banTemplates/saveBanTemplates";
+
+//Stats stuff
+export type { SvRtLogFilteredType, SvRtPerfCountsThreadType } from "@core/modules/Metrics/svRuntime/perfSchemas";
+export type { SvRtPerfThreadNamesType } from "@core/modules/Metrics/svRuntime/config";
+export type { PerfChartApiResp, PerfChartApiSuccessResp } from "@core/routes/perfChart";
+export type { PlayerDropsApiResp, PlayerDropsApiSuccessResp, PlayerDropsDetailedWindow, PlayerDropsSummaryHour } from "@core/routes/playerDrops";
+export type { PDLChangeEventType } from '@core/modules/Metrics/playerDrop/playerDropSchemas';
+
+//Other stuff
+export type { ApiAddLegacyBanReqSchema, ApiRevokeActionReqSchema } from "@core/routes/history/actions";
 
 export type UpdateDataType = {
     version: string;
@@ -22,9 +32,9 @@ export type ThemeType = {
 };
 
 export type AdsDataType = {
-    login: false | { img: string, url: string };
-    main: false | { img: string, url: string };
-}
+    login: { img: string, url: string } | null;
+    main: { img: string, url: string } | null;
+};
 
 export type InjectedTxConsts = {
     //Env
@@ -34,14 +44,21 @@ export type InjectedTxConsts = {
     txaOutdated: UpdateDataType,
 
     serverTimezone: string;
-    isZapHosting: boolean;
-    isPterodactyl: boolean;
+    isWindows: boolean;
     isWebInterface: boolean;
     showAdvanced: boolean;
     hasMasterAccount: boolean;
     defaultTheme: string;
     customThemes: Omit<ThemeType, 'style'>[];
     adsData: AdsDataType;
+    providerLogo: string | undefined;
+    providerName: string | undefined;
+    hostConfigSource: string;
+    server: {
+        name: string;
+        game: string | undefined;
+        icon: string | undefined;
+    };
 
     //Auth
     preAuth: ReactAuthDataType | false;
