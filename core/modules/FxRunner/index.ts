@@ -34,7 +34,7 @@ export default class FxRunner {
     private isAwaitingShutdownNoticeDelay = false;
     private isAwaitingRestartSpawnDelay = false;
     private restartSpawnBackoffDelay = 0;
-
+    public currentSaveProcessPromise: ((value: boolean) => void) | null = null;
 
     //MARK: SIGNALS
     /**
@@ -110,7 +110,7 @@ export default class FxRunner {
      */
     public async spawnServer(shouldAnnounce = false) {
         //If txAdmin is shutting down
-        if(txManager.isShuttingDown) {
+        if (txManager.isShuttingDown) {
             const msg = `Cannot start the server while txAdmin is shutting down.`;
             console.error(msg);
             return msg;
@@ -291,14 +291,43 @@ export default class FxRunner {
         }
     }
 
-
+    /**
+     * Saves all the server data
+     */
+    public async saveAllServerData(): Promise<boolean> {
+        if (this.currentSaveProcessPromise) {
+            console.warn('Save operation already in progress.');
+            return false;
+        }
+    
+        if (!this.proc?.isAlive) {
+            console.error('Cannot save server data: FXServer is not running.');
+            return false;
+        }
+    
+        try {
+            const cmdSuccess = this.sendCommand('txaGoingSaveServer', [], SYM_SYSTEM_AUTHOR);
+            if (!cmdSuccess) {
+                console.error('Failed to send save command to FXServer.');
+                return false;
+            }
+    
+            return new Promise<boolean>((resolve) => {
+                this.currentSaveProcessPromise = resolve;
+            });
+        } catch (error) {
+            console.error('Error while attempting to save server data:', error);
+            return false;
+        }
+    }
+    
     /**
      * Kills the FXServer child process.  
      * NOTE: isRestarting might be true even if not called by this.restartServer().
      */
     public async killServer(reason: string, author: string | typeof SYM_SYSTEM_AUTHOR, isRestarting = false) {
         if (!this.proc) return null; //nothing to kill
-
+    
         //Prepare vars
         const shutdownDelay = Math.max(txConfig.server.shutdownNoticeDelayMs, MIN_KILL_DELAY);
         const reasonString = reason ?? 'no reason provided';
@@ -308,7 +337,7 @@ export default class FxRunner {
             servername: txConfig.general.serverName,
             reason: reasonString,
         };
-
+    
         //Prevent concurrent kill request
         if (this.isAwaitingShutdownNoticeDelay) {
             const durationStr = msToShortishDuration(
@@ -317,10 +346,17 @@ export default class FxRunner {
             );
             return `A shutdown is already in progress, with a delay of ${durationStr}.`;
         }
-
+    
         try {
-            //If the process is alive, send warnings event and await the delay
+            //If the process is alive, save server data first
             if (this.proc.isAlive) {
+                // Attempt to save server data before shutdown
+                const saveResult = await this.saveAllServerData();
+                if (!saveResult) {
+                    console.warn('Failed to save server data before shutdown.');
+                }
+    
+                //Send shutdown warning event
                 this.sendEvent('serverShuttingDown', {
                     delay: txConfig.server.shutdownNoticeDelayMs,
                     author: typeof author === 'string' ? author : 'txAdmin',
@@ -330,13 +366,13 @@ export default class FxRunner {
                 await sleep(shutdownDelay);
                 this.isAwaitingShutdownNoticeDelay = false;
             }
-
+    
             //Stopping server
             this.proc.destroy();
             const debugInfo = this.proc.stateInfo;
             this.history.push(debugInfo);
             this.proc = null;
-
+    
             //Cleanup
             txCore.fxScheduler.handleServerClose();
             txCore.fxResources.handleServerClose();

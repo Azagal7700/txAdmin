@@ -143,7 +143,7 @@ local function txaGoingSaveServer(source)
         txAdminToken = TX_LUACOMTOKEN,
         success = hasBeenSaved == true
     }
-    txPrint('SERVER SAVED ALL')
+    txPrint('Sending server save all to txAdmin.')
     PerformHttpRequest(url, function(httpCode, data, resultHeaders)
         local resp = tostring(data)
         if httpCode ~= 200 then

@@ -35,14 +35,12 @@ export default async function Intercom(ctx: InitializedCtx) {
         if (!Array.isArray(postData.resources)) {
             return ctx.utils.error(400, 'Invalid Request');
         }
-        ctx.txAdmin.resourcesManager.tmpUpdateResourceList(postData.resources);
-    } else if (scope == 'serverSavedAll') {
-        if (ctx.txAdmin.fxRunner.currentSaveProcessPromise) {
-            ctx.txAdmin.fxRunner.currentSaveProcessPromise(true);
-            ctx.txAdmin.fxRunner.currentSaveProcessPromise = null;
-            return ctx.send('Save process complete.');
-        } else
-            return ctx.send('An error occured while saving data.');
+        txCore.fxResources.tmpUpdateResourceList(postData.resources);
+    } else if (scope == 'serverSavedAll') { 
+        if (!txCore.fxRunner.currentSaveProcessPromise) return ctx.send({ success: false, message: 'No save process in progress' });
+        txCore.fxRunner.currentSaveProcessPromise(true);
+        txCore.fxRunner.currentSaveProcessPromise = null;
+        return ctx.send({ success: true });
     } else {
         return ctx.send({
             type: 'danger',
